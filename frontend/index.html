@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Queen Domination Puzzle</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <main class="app">
+      <section class="intro">
+        <p class="eyebrow">Chessboard Coverage Puzzle</p>
+        <h1>Queens in Control</h1>
+        <p class="description">Place the fewest queens so that they do not attack one another and every empty square is attacked.</p>
+      </section>
+      <section class="solver-card" aria-label="Queen puzzle solver">
+        <form id="solve-form">
+          <label for="board-size">Board size</label>
+          <div class="form-row">
+            <input id="board-size" name="size" type="number" min="2" max="8" value="8" required />
+            <button type="submit" id="solve-button">Find solution</button>
+          </div>
+          <p class="hint">Enter a number from 2 to 8</p>
+        </form>
+        <p id="status" class="status" role="status" aria-live="polite">Ready to solve</p>
+        <div id="board-wrap" class="board-wrap" hidden>
+          <div id="board" class="board" role="grid" aria-label="Chessboard"></div>
+          <p id="result" class="result"></p>
+        </div>
+      </section>
+      <footer></footer>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
