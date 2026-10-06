@@ -25,13 +25,23 @@ From the project root, run:
 npm run dev
 ```
 
-Then open [http://localhost:8090](http://localhost:8090) in a browser. The Node.js server serves both the web UI and the API.
+Then open [http://localhost:8090](http://localhost:8090) in a browser. The local Node.js server serves both the web UI and the API.
 
-To start the app in production mode, run:
+To start the local server directly, run:
 
 ```bash
 npm start
 ```
+
+## Deploy to Vercel
+
+The project is arranged for Vercel deployment:
+
+- `public/` contains the static web interface.
+- `api/solve.js` handles `POST /api/solve` as a serverless function.
+- `server/queenSolver.js` contains the solver shared by the local server and Vercel function.
+
+Import the repository into Vercel and deploy it from the repository root. No frontend build command or third-party runtime dependencies are required. The local `npm run dev` command continues to start the standalone Node.js server for development.
 
 ## API
 
@@ -73,15 +83,18 @@ Tests cover placement validity and minimality on small boards, the 8×8 board, A
 ## Project structure
 
 ```text
+api/
+  solve.js             Vercel serverless API function
 server/
-  index.js             HTTP server, API, and static file serving
+  index.js             local HTTP server
   queenSolver.js       minimum queen placement solver
-frontend/
-  index.html           page markup
+  solveRequest.js      shared API validation and solver call
+public/
+  index.html           page markup served as a static asset
   src/main.js          input handling, API request, and board rendering
   src/style.css        styles
- test/
-  api.test.js          HTTP server tests
+test/
+  api.test.js          local server and Vercel API tests
   queenSolver.test.js  solver tests
 TASK_SPEC.md           full project specification
 ```

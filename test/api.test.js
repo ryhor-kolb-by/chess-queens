@@ -1,9 +1,45 @@
 import test, { afterEach, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { createApiServer } from '../server/index.js';
+import { handler as vercelSolve } from '../api/solve.js';
+import { solveRequest } from '../server/solveRequest.js';
 
 let server;
 let baseUrl;
+
+test('shared solve request validates sizes and returns solver results', () => {
+  const valid = solveRequest({ size: 2 });
+  assert.equal(valid.statusCode, 200);
+  assert.equal(valid.payload.queens.length, 1);
+
+  const invalid = solveRequest({ size: 9 });
+  assert.equal(invalid.statusCode, 400);
+  assert.equal(typeof invalid.payload.error, 'string');
+});
+
+test('Vercel function returns solutions and rejects unsupported methods', () => {
+  const success = createMockResponse();
+  vercelSolve({ method: 'POST', body: { size: 2 } }, success);
+  assert.equal(success.statusCode, 200);
+  assert.equal(JSON.parse(success.body).queens.length, 1);
+
+  const badRequest = createMockResponse();
+  vercelSolve({ method: 'POST', body: { size: 9 } }, badRequest);
+  assert.equal(badRequest.statusCode, 400);
+
+  const methodNotAllowed = createMockResponse();
+  vercelSolve({ method: 'GET' }, methodNotAllowed);
+  assert.equal(methodNotAllowed.statusCode, 405);
+  assert.equal(methodNotAllowed.headers.get('Allow'), 'POST');
+});
+
+function createMockResponse() {
+  return {
+    headers: new Map(),
+    setHeader(name, value) { this.headers.set(name, value); },
+    end(body) { this.body = body; },
+  };
+}
 
 beforeEach(async () => {
   server = createApiServer();
@@ -70,7 +106,7 @@ test('serves the browser UI and static assets', async () => {
   assert.match(style.headers.get('content-type'), /text\/css/);
 });
 
-test('does not expose files outside the frontend directory', async () => {
+test('does not expose files outside the public directory', async () => {
   const response = await fetch(`${baseUrl}/%2e%2e/server/index.js`);
   assert.equal(response.status, 404);
   assert.equal(typeof (await response.json()).error, 'string');

@@ -35,10 +35,9 @@ Build an educational Node.js application that finds the minimum number of queens
 
 - Both server and client logic use **Node.js and JavaScript**.
 - Java, Maven, and Vite are not used.
-- A single server process using Node.js built-in modules:
-  - handles the HTTP API;
-  - serves the HTML, CSS, and JavaScript UI.
-- The server listens on `localhost:8090`.
+- The local app uses a single server process with Node.js built-in modules to handle the API and serve the HTML, CSS, and JavaScript UI.
+- The local server listens on `localhost:8090`.
+- For Vercel, the UI is deployed as static files from `public/` and `POST /api/solve` is deployed as a serverless function from `api/solve.js`.
 - No third-party backend libraries are required.
 
 ## 5. Solver
@@ -84,10 +83,12 @@ The returned coordinates depend on the solution found. Request errors are return
 ## 7. Project Structure and Commands
 
 - `server/queenSolver.js` — search algorithm.
-- `server/index.js` — HTTP API and static file serving.
-- `frontend/` — HTML, CSS, and client-side JavaScript.
-- `test/` — automated solver and HTTP server tests.
-- `npm run dev` or `npm start` — start the app.
+- `server/solveRequest.js` — shared input validation and solver invocation.
+- `server/index.js` — local HTTP API and static file server.
+- `api/solve.js` — Vercel serverless function for `POST /api/solve`.
+- `public/` — static HTML, CSS, and client-side JavaScript.
+- `test/` — automated solver, local server, and function tests.
+- `npm run dev` or `npm start` — start the local app.
 - `npm test` — run tests with Node.js's built-in test runner.
 
 ## 8. Acceptance Criteria
@@ -96,6 +97,6 @@ The returned coordinates depend on the solution found. Request errors are return
 - No pair of queens in a returned solution attacks one another.
 - Every empty square is attacked by at least one queen.
 - The number of queens is minimal, and the UI displays that count.
-- The UI and API are served by one Node.js server without Vite.
+- Locally, one Node.js server serves the UI and API without Vite; on Vercel, the UI is static and the API runs as a serverless function.
 - HTML, JavaScript, and CSS responses have correct HTTP Content-Type headers.
 - Tests cover valid and invalid requests, static assets, placement validity, and minimality for small boards.
