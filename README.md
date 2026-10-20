@@ -1,5 +1,7 @@
 # Queen Domination on a Chessboard
 
+[![Tests](https://github.com/ryhor-kolb-by/chess-queens/actions/workflows/test.yml/badge.svg)](https://github.com/ryhor-kolb-by/chess-queens/actions/workflows/test.yml)
+
 An educational Node.js web app that finds a minimum-size placement of queens covering every empty square on a chessboard and displays the result in a browser.
 
 ![Queen puzzle app screenshot](docs/screenshot.png)
@@ -105,7 +107,7 @@ Run the automated tests with:
 npm test
 ```
 
-Tests cover placement validity and minimality on small boards, the 8×8 board, API validation, and serving the HTML, CSS, and JavaScript assets.
+Tests cover placement validity and minimality on small boards, the 8×8 board, API validation, and serving the HTML, CSS, and JavaScript assets. GitHub Actions runs them on Node.js 20, 22, and 24 for every push to `main` and every pull request.
 
 ## Project structure
 
