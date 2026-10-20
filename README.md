@@ -4,6 +4,33 @@ An educational Node.js web app that finds a minimum-size placement of queens cov
 
 ![Queen puzzle app screenshot](docs/screenshot.png)
 
+Live demo: `<replace with your Vercel deployment URL>`
+
+## How this project was built
+
+This project was built with [Claude Code](https://claude.com/claude-code), from a
+written specification through to a deployable app:
+
+1. **Spec first.** [`TASK_SPEC.md`](TASK_SPEC.md) was written before any code — the
+   board size range, the attack/coverage rules, and the acceptance criteria that the
+   implementation and tests are checked against.
+2. **Solver as an isolated core.** [`server/queenSolver.js`](server/queenSolver.js)
+   contains only the search algorithm, with no HTTP or I/O concerns, so it can be
+   tested and reasoned about on its own.
+3. **Minimality checked independently.** [`test/queenSolver.test.js`](test/queenSolver.test.js)
+   doesn't just check that a placement is valid — for small boards it searches for a
+   smaller valid placement using a separate brute-force search, to catch cases where
+   the solver returns a correct but non-minimal answer.
+4. **A second adapter added later, without touching the core.** The app originally
+   ran only as a local Node.js server. Deploying to Vercel (commit `f05445e`) meant
+   adding `api/solve.js` as a serverless function and extracting the shared request
+   validation into [`server/solveRequest.js`](server/solveRequest.js), so the local
+   server and the serverless function share identical behavior instead of
+   duplicating validation logic.
+
+See [`CLAUDE.md`](CLAUDE.md) for the conventions an agent (or any contributor)
+should follow when working in this codebase.
+
 ## Rules
 
 - The board size must be an integer from **2 to 8**, inclusive.
@@ -96,6 +123,7 @@ public/
 test/
   api.test.js          local server and Vercel API tests
   queenSolver.test.js  solver tests
+CLAUDE.md               conventions for agents/contributors working in this repo
 TASK_SPEC.md           full project specification
 ```
 
